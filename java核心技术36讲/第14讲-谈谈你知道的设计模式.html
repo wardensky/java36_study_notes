@@ -1,0 +1,116 @@
+<h1 id="谈谈你知道的设计模式">谈谈你知道的设计模式？</h1>
+<p>设计模式在刚刚工作的时候就开始看，那个时候有很多都看不明白。最近再拿起来看，发现很多都在工作中应用。</p>
+<ul>
+<li>创建型模式，是对对象创建过程的各种问题和解决方案的总结，包括各种工厂模式（Factory、Abstract Factory）、单例模式（Singleton）、构建器模式（Builder）、原型模式（ProtoType）。</li>
+<li>结构型模式，是针对软件设计结构的总结，关注于类、对象继承、组合方式的实践经验。常见的结构型模式，包括桥接模式（Bridge）、适配器模式（Adapter）、装饰者模式（Decorator）、代理模式（Proxy）、组合模式（Composite）、外观模式（Facade）、享元模式（Flyweight）等。</li>
+<li>行为型模式，是从类或对象之间交互、职责划分等角度总结的模式。比较常见的行为型模式有策略模式（Strategy）、解释器模式（Interpreter）、命令模式（Command）、观察者模式（Observer）、迭代器模式（Iterator）、模板方法模式（Template Method）、访问者模式（Visitor）。</li>
+</ul>
+<h2 id="创建型模式">创建型模式</h2>
+<h3 id="工厂模式factorymethod">工厂模式（FactoryMethod）</h3>
+<p>这个太常见了，不说了。</p>
+<h3 id="单例模式singleton">单例模式（Singleton）</h3>
+<p>用的最熟悉的模式之一，要记住懒加载、双重检查锁、枚举单例，还有一个新的内部类实现。</p>
+<h4 id="懒加载">懒加载</h4>
+<p>这个比较简单，就不贴代码了。</p>
+<h4 id="双重检查锁">双重检查锁</h4>
+<pre><code>
+/**
+ * @Description 基于双重检查的单例
+ * @author zch
+ * @time 2018年7月20日 上午11:03:43
+ *
+ */
+class Demo2 {
+
+    private static volatile Demo2 inst;
+
+    private Demo2() {
+    }
+
+    public static Demo2 getInst() {
+        if (inst == null) {
+            synchronized (Demo2.class) {
+                if (inst == null) {
+                    inst = new Demo2();
+                }
+            }
+        }
+        return inst;
+    }
+}
+</code></pre>
+<h4 id="枚举">枚举</h4>
+<pre><code>
+class Resource {
+}
+
+/**
+ * @Description 枚举方式单例，effective java里面有介绍
+ * @author zch
+ * @time 2018年7月20日 上午11:14:16
+ *
+ */
+enum Demo3 {
+
+    INSTANCE;
+
+    private Resource instance;
+
+    Demo3() {
+        instance = new Resource();
+    }
+
+    public Resource getInstance() {
+        return instance;
+    }
+}
+</code></pre>
+<h4 id="内部类实现">内部类实现</h4>
+<pre><code>
+/**
+ * @Description 内部类实现单例
+ * @author zch
+ * @time 2018年7月20日 上午11:21:14
+ *
+ */
+class Demo4 {
+    private Demo4() {
+    }
+
+    public static Demo4 getInstance() {
+        return Holder.inst;
+    }
+
+    private static class Holder {
+        private static Demo4 inst = new Demo4();
+    }
+}</code></pre>
+<h3 id="构建器模式prototype">构建器模式（Prototype）</h3>
+<p>构建器模式和抽象工厂模式主要的区别就就是，构建器模式一步步创建对象，所以及时展开输出创建过程似乎很重要。</p>
+<p>代码如下：</p>
+<pre><code>A a = new A.Builder().seta(1).setb(2).setc(3).build();</code></pre>
+<p>这个在开发中也用过。</p>
+<h3 id="原型模式">原型模式</h3>
+<p>原型模式主要通过深拷贝实现对象的创建，之前用过。</p>
+<h2 id="结构型模式">结构型模式</h2>
+<h3 id="桥接模式adapter">桥接模式（Adapter）</h3>
+<p>这个也常用。</p>
+<p>将一个类的接口转换成客户希望的另一个接口，使得原本由于接口不兼容而不能在一起工作的类一起工作。 即使用聚合而不是继承。 一种事物可在多种维度变化（如两个维度，每个维度三种可能）时，如果为每一种可能创建一个子类，则每增加一个维度上的可能需要增加多个类，这会造成类爆炸（3*3=9）。若使用桥接模式，使用类聚合，而非继承，将可缓解类爆炸，并增强可扩展性。</p>
+<p><a href="http://www.jasongj.com/design_pattern/bridge/">参考</a></p>
+<h3 id="适配器模式adapter-pattern">适配器模式（Adapter Pattern）</h3>
+<p>将一个类的接口转换成客户希望的另外一个接口。适配器模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
+<p>其实就是封装了一层。</p>
+<p><a href="http://www.jasongj.com/design_pattern/adapter/">参考</a></p>
+<h3 id="装饰者模式">装饰者模式</h3>
+<h3 id="代理模式">代理模式</h3>
+<h3 id="组合模式">组合模式</h3>
+<h3 id="外观模式">外观模式</h3>
+<h3 id="享元模式">享元模式</h3>
+<h2 id="行为型模式">行为型模式</h2>
+<h3 id="策略模式">策略模式</h3>
+<h3 id="解释器模式">解释器模式</h3>
+<h3 id="命令模式">命令模式</h3>
+<h3 id="观察者模式">观察者模式</h3>
+<h3 id="迭代器模式">迭代器模式</h3>
+<h3 id="模板方法模式">模板方法模式</h3>
+<h3 id="访问者模式">访问者模式</h3>
