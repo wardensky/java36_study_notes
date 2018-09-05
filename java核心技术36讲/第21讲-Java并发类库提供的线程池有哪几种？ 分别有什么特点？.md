@@ -199,6 +199,7 @@ public static ExecutorService newWorkStealingPool(int parallelism) {
 
 ### ThreadPoolExecutor源码
 
+
 看看ThreadPoolExecutor的构造函数
 
 ```
@@ -275,6 +276,9 @@ public ThreadPoolExecutor(int corePoolSize,
 
 也可以自己调用ThreadPoolExecutor生成Executor
 
+可以用下图形象的看出队列和线程池的关系。
+
+![](./images/executors-1.png)
 
 ### ScheduledThreadPoolExecutor和ForkJoinPool
 
@@ -538,6 +542,22 @@ MY_THREAD线程被调用了。
 ```
 > **注意，不能用shutdown**
 
+## 线程池大小的选择策略
+
+线程池大小不合适，太多会太少，都会导致麻烦，所以我们需要去考虑一个合适的线程池大小。虽然不能完全确定，但是有一些相对普适的规则和思路。
+
+如果我们的任务主要是进行计算，那么就意味着 CPU 的处理能力是稀缺的资源，我们能够通过大量增加线程数提高计算能力吗？往往是不能的，如果线程太多，反倒可能导致大量的上下文切换开销。所以，这种情况下，通常建议按照 CPU 核的数目 N 或者 N+1。
+
+如果是需要较多等待的任务，例如 I/O 操作比较多，可以参考 Brain Goetz 推荐的计算方法：
+
+```
+
+线程数 = CPU 核数 × （1 + 平均等待时间 / 平均工作时间）
+
+```
+
+在我自己的经验中，如果是CPU密集的线程，就把线程数设置为跟CPU核数差不多。如果是IO密集的线程，就把线程数设置为CPU核数的两倍，不知道对不对。
+
 ## Callable和Future
 
 在Java 5之后，任务分两类：一类是实现了Runnable接口的类，一类是实现了Callable接口的类。两者都可以被ExecutorService执行，但是Runnable任务没有返回值，而Callable任务有返回值。并且Callable的call()方法只能通过ExecutorService的submit(Callable<T> task) 方法来执行，并且返回一个 <T>Future<T>，是表示任务等待完成的 Future。
@@ -592,5 +612,7 @@ pool-1-thread-1return : 	35
 ```
 
 ## 参考
+
 - [ 【Java并发编程】之十九：并发新特性—Executor框架与线程池（含代码）](http://blog.csdn.net/ns_code/article/details/17465497)
 - [Java线程(七)：Callable和Future](http://blog.csdn.net/ghsau/article/details/7451464)
+- [我的源码](https://github.com/wardensky/java36_study_notes/tree/master/java36/src/main/java/com/zch/java36/lesson21)
